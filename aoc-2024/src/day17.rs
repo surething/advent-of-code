@@ -163,13 +163,13 @@ impl Reversible for LargeExecutable {
             c = a.bvlshr(&b);
             b ^= BV::from_u64(6, 64);
             b ^= c;
-            a = a.bvlshr(&BV::from_u64(3, 64));
+            a = a.bvlshr(BV::from_u64(3, 64));
             // Assert that B's lower bits outputs the current program value.
-            opt.assert(&(&b & &BV::from_i64(7, 64)).eq(&BV::from_i64(x, 64)));
+            opt.assert(&(&b & &BV::from_i64(7, 64)).eq(BV::from_i64(x, 64)));
         }
 
         // Assert that A is zero for program termination.
-        opt.assert(&(a.eq(&BV::from_i64(0, 64))));
+        opt.assert(&(a.eq(BV::from_i64(0, 64))));
 
         // Look to keeping the register value as low as possible.
         opt.minimize(&s);

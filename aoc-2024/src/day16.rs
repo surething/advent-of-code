@@ -124,6 +124,7 @@ impl PartialEq for ScoredPath {
 
 impl Eq for ScoredPath {}
 
+#[allow(clippy::non_canonical_partial_ord_impl)]
 impl PartialOrd for ScoredPath {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.0.score.cmp(&other.0.score))
@@ -174,7 +175,7 @@ impl Path {
     fn reaches_exit(&self, maze: &Maze) -> bool {
         self.vec
             .last()
-            .map_or(false, |s| maze[&s.coordinate].is_exit())
+            .is_some_and(|s| maze[&s.coordinate].is_exit())
     }
     fn calculate_score(&self) -> usize {
         let num_turns = self

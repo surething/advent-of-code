@@ -105,15 +105,15 @@ impl DiskMap {
             .rev()
             .find_position(|desc| matches!(desc, Desc::File(_, _)))
             .map(|(i, _)| i);
-        if let Some(index_space) = index_space {
-            if let Some(rev_index_file) = rev_index_file {
-                let index_file = self.disk.len() - rev_index_file - 1;
-                return if index_space <= index_file {
-                    self.move_file(index_file, index_space)
-                } else {
-                    DefragAction::Nothing
-                };
-            }
+        if let Some(index_space) = index_space
+            && let Some(rev_index_file) = rev_index_file
+        {
+            let index_file = self.disk.len() - rev_index_file - 1;
+            return if index_space <= index_file {
+                self.move_file(index_file, index_space)
+            } else {
+                DefragAction::Nothing
+            };
         }
         DefragAction::Nothing
     }

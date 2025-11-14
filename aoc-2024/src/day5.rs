@@ -66,12 +66,12 @@ impl RuleFixing for Update {
             .iter()
             .find_position(|&&page| page == rule.post)
             .map(|r| r.0);
-        if let (Some(ante_index), Some(post_index)) = (ante, post) {
-            if ante_index >= post_index {
-                self.remove(ante_index);
-                self.insert(post_index, rule.ante);
-                return true;
-            }
+        if let (Some(ante_index), Some(post_index)) = (ante, post)
+            && ante_index >= post_index
+        {
+            self.remove(ante_index);
+            self.insert(post_index, rule.ante);
+            return true;
         }
         false
     }
