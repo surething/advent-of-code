@@ -2,7 +2,7 @@ use aoc_common::prelude::*;
 use aoc_data::prelude::*;
 use nom::branch::alt;
 use nom::character::complete::{char, newline, one_of};
-use nom::combinator::{flat_map, map, opt, recognize};
+use nom::combinator::{map, opt};
 use nom::multi::{fold_many1, many1};
 use nom::sequence::terminated;
 use std::ops::{Index, IndexMut};
@@ -314,7 +314,8 @@ fn parse_arena(i: &str) -> IResult<&str, Arena> {
             map(char('@'), |_| Tile::Robot),
         ))),
         opt(newline),
-    ))(i)?;
+    ))
+    .parse(i)?;
     Ok((i, Arena::new(tiles)))
 }
 
@@ -328,7 +329,8 @@ fn parse_moves(i: &str) -> IResult<&str, Moves> {
             _ => {}
         }
         acc
-    })(i)
+    })
+    .parse(i)
 }
 
 fn parse_map_and_moves(i: &str) -> IResult<&str, (Arena, Moves)> {
@@ -382,7 +384,6 @@ impl Task for Solver {
 
 #[cfg(test)]
 mod test {
-
     use super::*;
     use rstest::*;
 

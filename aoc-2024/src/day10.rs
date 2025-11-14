@@ -1,9 +1,7 @@
 use aoc_common::prelude::*;
 use aoc_data::prelude::*;
-use nom::branch::alt;
-use nom::bytes::complete::tag;
+use nom::AsChar;
 use nom::character::complete::{newline, satisfy};
-use nom::character::{is_digit, is_newline};
 use nom::combinator::map;
 use nom::multi::{many1, separated_list1};
 use std::collections::HashSet;
@@ -188,10 +186,11 @@ impl Iterator for CoordinateIterator {
 fn parse_map(i: &str) -> IResult<&str, Map> {
     let (i, heights) = separated_list1(
         newline,
-        many1(map(satisfy(|c| is_digit(c as u8)), |c| {
+        many1(map(satisfy(|c| AsChar::is_dec_digit(c as u8)), |c| {
             c.to_string().parse::<Height>().unwrap()
         })),
-    )(i)?;
+    )
+    .parse(i)?;
     let map = Map::new(heights);
     Ok((i, map))
 }
@@ -240,7 +239,6 @@ impl Task for Solver {
 
 #[cfg(test)]
 mod test {
-
     use super::*;
     use rstest::*;
 

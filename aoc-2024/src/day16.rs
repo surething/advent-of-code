@@ -6,7 +6,7 @@ use nom::combinator::{map, opt};
 use nom::multi::many1;
 use nom::sequence::terminated;
 use std::cmp::{Ordering, Reverse};
-use std::collections::{BTreeSet, BinaryHeap, HashMap, HashSet};
+use std::collections::{BinaryHeap, HashMap, HashSet};
 use std::ops::Index;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, EnumIter)]
@@ -410,7 +410,8 @@ fn parse_maze(i: &str) -> IResult<&str, Maze> {
             map(char('E'), |_| Tile::Exit),
         ))),
         opt(newline),
-    ))(i)?;
+    ))
+    .parse(i)?;
     Ok((i, Maze::new(tiles)))
 }
 
@@ -455,7 +456,6 @@ impl Task for Solver {
 
 #[cfg(test)]
 mod test {
-
     use super::*;
     use rstest::*;
 

@@ -2,7 +2,10 @@ use aoc_common::prelude::*;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-pub trait ResourceReader where Self: Task {
+pub trait ResourceReader
+where
+    Self: Task,
+{
     fn read_resource(&self, input: Input) -> Result<String> {
         let event = self.event();
         let day = self.day();
@@ -23,6 +26,5 @@ fn read_resource(event: Event, day: Day, input: Input) -> Result<String> {
     .iter()
     .collect();
 
-    fs::read_to_string(file_path)
-        .map_err(AdventError::from)
+    fs::read_to_string(file_path).map_err(AdventError::from)
 }

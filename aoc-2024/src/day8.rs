@@ -1,10 +1,9 @@
 use aoc_common::prelude::*;
 use aoc_data::prelude::*;
+use nom::AsChar;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
-use nom::character::complete::{anychar, newline, one_of, satisfy};
-use nom::character::is_newline;
-use nom::character::streaming::not_line_ending;
+use nom::character::complete::{newline, satisfy};
 use nom::combinator::map;
 use nom::multi::{many1, separated_list1};
 use std::collections::{HashMap, HashSet};
@@ -112,7 +111,7 @@ impl Map {
         let antinodes = self
             .coordinates_by_frequency()
             .iter()
-            .flat_map(|(freq, coord)| {
+            .flat_map(|(_freq, coord)| {
                 let rows = 0..self.rows as i32;
                 let cols = 0..self.cols as i32;
                 coord
@@ -172,9 +171,10 @@ fn parse_map(input: &str) -> IResult<&str, Map> {
         newline,
         many1(alt((
             map(tag("."), |_| Tile::Empty),
-            map(satisfy(|c| !is_newline(c as u8)), Tile::Antenna),
+            map(satisfy(|c| !AsChar::is_newline(c as u8)), Tile::Antenna),
         ))),
-    )(input)?;
+    )
+    .parse(input)?;
     let map = Map::new(tiles);
     Ok((input, map))
 }
@@ -202,7 +202,7 @@ impl Task for Solver {
         let result = map
             .coordinates_by_frequency()
             .iter()
-            .flat_map(|(freq, coord)| {
+            .flat_map(|(_freq, coord)| {
                 coord
                     .iter()
                     .tuple_combinations::<(_, _)>()
@@ -223,7 +223,7 @@ impl Task for Solver {
         let result = map
             .coordinates_by_frequency()
             .iter()
-            .flat_map(|(freq, coord)| {
+            .flat_map(|(_freq, coord)| {
                 let rows = 0..map.rows as i32;
                 let cols = 0..map.cols as i32;
                 coord
@@ -243,7 +243,6 @@ impl Task for Solver {
 
 #[cfg(test)]
 mod test {
-
     use super::*;
     use rstest::*;
 

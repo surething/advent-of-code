@@ -1,11 +1,10 @@
 use aoc_common::prelude::*;
 use aoc_data::prelude::*;
-use std::ops::{BitOr, BitXorAssign, Deref};
 use nom::bytes::complete::tag;
 use nom::character::complete;
 use nom::character::complete::newline;
-use nom::combinator::opt;
 use nom::multi::separated_list1;
+use std::ops::{BitXorAssign, Deref};
 use z3::ast::{Ast, BV};
 
 struct Registers {
@@ -119,7 +118,7 @@ impl Reversible for SmallExecutable2 {
         let mut register = 0;
 
         // build up a value matching (only possible because of how the program executes)
-        //      0   3   4   5   3   0   0   
+        //      0   3   4   5   3   0   0
         // 0b_000_011_100_101_011_000_000
 
         for val in program.into_iter().rev() {
@@ -144,7 +143,7 @@ impl Reversible for LargeExecutable {
         // jnz -
         //
         // A must be zero at the end.
-        
+
         let program = vec![2, 4, 1, 5, 7, 5, 4, 3, 1, 6, 0, 3, 5, 5, 3, 0];
         let mut register = 0;
 
@@ -152,7 +151,7 @@ impl Reversible for LargeExecutable {
         let opt = z3::Optimize::new();
 
         let s = BV::new_const("s", 64);
-        
+
         let mut a = s.clone();
         let mut b = BV::from_u64(0, 64);
         let mut c = BV::from_u64(0, 64);
@@ -166,35 +165,23 @@ impl Reversible for LargeExecutable {
             b ^= c;
             a = a.bvlshr(&BV::from_u64(3, 64));
             // Assert that B's lower bits outputs the current program value.
-            opt.assert(
-                &(
-                    &b & &BV::from_i64(7, 64)
-                )
-                ._eq(
-                    &BV::from_i64(x, 64)
-                )
-            );
+            opt.assert(&(&b & &BV::from_i64(7, 64)).eq(&BV::from_i64(x, 64)));
         }
 
         // Assert that A is zero for program termination.
-        opt.assert(
-            &(
-                a._eq(&BV::from_i64(0, 64))
-            )
-        );
-        
+        opt.assert(&(a.eq(&BV::from_i64(0, 64))));
+
         // Look to keeping the register value as low as possible.
         opt.minimize(&s);
-        
+
         match opt.check(&[]) {
-            z3::SatResult::Sat => {
-                opt.get_model()
-                    .expect("Model")
-                    .eval(&s, true)
-                    .expect("Eval")
-                    .as_u64()
-                    .expect("U64")
-            }
+            z3::SatResult::Sat => opt
+                .get_model()
+                .expect("Model")
+                .eval(&s, true)
+                .expect("Eval")
+                .as_u64()
+                .expect("U64"),
             _ => panic!("Unsat"),
         }
     }
@@ -205,7 +192,6 @@ impl Executable for FlexiExecutable {
         let mut output = vec![];
         let mut ip = 0;
         while ip < self.program.len() {
-
             let instruction = Instruction::try_from(self.program[ip]).expect("Invalid instruction");
             let operand = instruction.operand(self.program[ip + 1]).value(registers);
             ip += 2;
@@ -225,9 +211,7 @@ impl Executable for FlexiExecutable {
                         ip = operand as usize;
                     }
                 }
-                Instruction::Bxc => {
-                    registers.b.bitxor_assign(registers.c)
-                }
+                Instruction::Bxc => registers.b.bitxor_assign(registers.c),
                 Instruction::Out => {
                     output.push(operand % 8);
                 }
@@ -249,7 +233,9 @@ impl Executable for SmallExecutable1 {
         loop {
             registers.a >>= 1;
             output.push(registers.a % 8);
-            if registers.a == 0 { break }
+            if registers.a == 0 {
+                break;
+            }
         }
         output
     }
@@ -266,7 +252,9 @@ impl Executable for LargeExecutable {
             registers.b.bitxor_assign(registers.c);
             registers.a >>= 3;
             output.push(registers.b % 8);
-            if registers.a == 0 { break }
+            if registers.a == 0 {
+                break;
+            }
         }
         output
     }
@@ -289,17 +277,17 @@ impl Computer {
 }
 
 fn parse_register_value<'a>(i: &'a str, register: &'a str) -> IResult<&'a str, u64> {
-    let (i, _) = tag("Register ")(i)?;
-    let (i, _) = tag(register)(i)?;
-    let (i, _) = tag(": ")(i)?;
+    let (i, _) = tag("Register ").parse(i)?;
+    let (i, _) = tag(register).parse(i)?;
+    let (i, _) = tag(": ").parse(i)?;
     let (i, value) = complete::u64(i)?;
     let (i, _) = newline(i)?;
     Ok((i, value))
 }
 
 fn parse_program(i: &str) -> IResult<&str, Program> {
-    let (i, _) = tag("Program: ")(i)?;
-    let (i, program) = separated_list1(tag(","), complete::u64)(i)?;
+    let (i, _) = tag("Program: ").parse(i)?;
+    let (i, program) = separated_list1(tag(","), complete::u64).parse(i)?;
     Ok((i, program))
 }
 
@@ -355,7 +343,9 @@ impl Task for Solver {
     fn solve_part2(&self, input: &str) -> Result<String> {
         let (mut computer, _) = parse_input(input)?;
         let executable: Box<dyn Reversible> = match self.kind {
-            SolverKind::Flexi | SolverKind::Small1 => return Err(AdventError::Other("Unsupported kind".to_string())),
+            SolverKind::Flexi | SolverKind::Small1 => {
+                return Err(AdventError::Other("Unsupported kind".to_string()));
+            }
             SolverKind::Small2 => Box::new(SmallExecutable2 {}),
             SolverKind::Large => Box::new(LargeExecutable {}),
         };
@@ -366,7 +356,6 @@ impl Task for Solver {
 
 #[cfg(test)]
 mod test {
-
     use super::*;
     use rstest::*;
 

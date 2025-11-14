@@ -1,8 +1,7 @@
 use aoc_common::prelude::*;
 use aoc_data::prelude::*;
-use nom::character::complete::{digit1, one_of, satisfy};
-use nom::character::is_digit;
-use nom::combinator::{map, map_opt};
+use nom::character::complete::one_of;
+use nom::combinator::map_opt;
 use nom::multi::many1;
 use std::collections::HashSet;
 
@@ -182,7 +181,7 @@ impl DiskMap {
 }
 
 fn parse_disk_map(i: &str) -> IResult<&str, DiskMap> {
-    let (i, sizes) = many1(map_opt(one_of("0123456789"), |c| c.to_digit(10)))(i)?;
+    let (i, sizes) = many1(map_opt(one_of("0123456789"), |c| c.to_digit(10))).parse(i)?;
     let disk = sizes
         .iter()
         .enumerate()
@@ -230,7 +229,6 @@ impl Task for Solver {
 
 #[cfg(test)]
 mod test {
-
     use super::*;
     use rstest::*;
 

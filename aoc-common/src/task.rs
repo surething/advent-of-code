@@ -1,4 +1,4 @@
-use crate::enums::{Event, Day};
+use crate::enums::{Day, Event};
 use crate::error::Result;
 
 pub trait Task {

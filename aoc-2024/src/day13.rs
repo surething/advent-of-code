@@ -145,23 +145,23 @@ impl Machine {
 type Machines = Vec<Machine>;
 
 fn parse_button(i: &str) -> IResult<&str, Button> {
-    let (i, _) = tag("Button ")(i)?;
+    let (i, _) = tag("Button ").parse(i)?;
     let (i, _) = anychar(i)?;
-    let (i, _) = tag(": X+")(i)?;
+    let (i, _) = tag(": X+").parse(i)?;
     let (i, dx) = complete::i64(i)?;
-    let (i, _) = tag(", Y+")(i)?;
+    let (i, _) = tag(", Y+").parse(i)?;
     let (i, dy) = complete::i64(i)?;
-    let (i, _) = opt(newline)(i)?;
+    let (i, _) = opt(newline).parse(i)?;
     Ok((i, Button::new(dx, dy)))
 }
 
 fn parse_prize(i: &str) -> IResult<&str, Prize> {
-    let (i, _) = tag("Prize: ")(i)?;
-    let (i, _) = tag("X=")(i)?;
+    let (i, _) = tag("Prize: ").parse(i)?;
+    let (i, _) = tag("X=").parse(i)?;
     let (i, x) = complete::i64(i)?;
-    let (i, _) = tag(", Y=")(i)?;
+    let (i, _) = tag(", Y=").parse(i)?;
     let (i, y) = complete::i64(i)?;
-    let (i, _) = opt(newline)(i)?;
+    let (i, _) = opt(newline).parse(i)?;
     Ok((i, Prize::new(Coordinate::new(x, y))))
 }
 fn parse_machine(i: &str) -> IResult<&str, Machine> {
@@ -172,7 +172,7 @@ fn parse_machine(i: &str) -> IResult<&str, Machine> {
 }
 
 fn parse_machines(i: &str) -> IResult<&str, Machines> {
-    separated_list1(newline, parse_machine)(i)
+    separated_list1(newline, parse_machine).parse(i)
 }
 
 fn parse_input(input: &str) -> Result<Machines> {

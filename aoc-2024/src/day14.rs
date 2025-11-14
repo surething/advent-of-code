@@ -117,22 +117,22 @@ impl Arena {
 }
 
 fn parse_vec2(i: &str) -> IResult<&str, Vec2> {
-    let (i, (x, y)) = separated_pair(complete::i32, tag(","), complete::i32)(i)?;
+    let (i, (x, y)) = separated_pair(complete::i32, tag(","), complete::i32).parse(i)?;
     Ok((i, Vec2 { x, y }))
 }
 
 fn parse_state(i: &str) -> IResult<&str, State> {
-    let (i, _) = tag("p=")(i)?;
+    let (i, _) = tag("p=").parse(i)?;
     let (i, pos) = parse_vec2(i)?;
     let (i, _) = space1(i)?;
-    let (i, _) = tag("v=")(i)?;
+    let (i, _) = tag("v=").parse(i)?;
     let (i, vel) = parse_vec2(i)?;
-    let (i, _) = opt(newline)(i)?;
+    let (i, _) = opt(newline).parse(i)?;
     Ok((i, State { pos, vel }))
 }
 
 fn parse_input(i: &str) -> Result<Vec<State>> {
-    many1(parse_state)(i).map_and_finish()
+    many1(parse_state).parse(i).map_and_finish()
 }
 
 struct Solver {

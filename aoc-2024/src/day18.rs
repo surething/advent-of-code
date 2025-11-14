@@ -1,12 +1,12 @@
 use aoc_common::prelude::*;
 use aoc_data::prelude::*;
-use std::collections::HashSet;
 use nom::bytes::complete::tag;
 use nom::character::complete;
 use nom::character::complete::newline;
 use nom::combinator::{map, opt};
 use nom::multi::many1;
 use nom::sequence::{separated_pair, terminated};
+use std::collections::HashSet;
 
 enum Direction {
     Up,
@@ -24,10 +24,22 @@ struct Position {
 impl Position {
     fn move_to(&self, direction: Direction) -> Position {
         match direction {
-            Direction::Up => Position { x: self.x, y: self.y - 1 },
-            Direction::Down => Position { x: self.x, y: self.y + 1 },
-            Direction::Left => Position { x: self.x - 1, y: self.y },
-            Direction::Right => Position { x: self.x + 1, y: self.y },
+            Direction::Up => Position {
+                x: self.x,
+                y: self.y - 1,
+            },
+            Direction::Down => Position {
+                x: self.x,
+                y: self.y + 1,
+            },
+            Direction::Left => Position {
+                x: self.x - 1,
+                y: self.y,
+            },
+            Direction::Right => Position {
+                x: self.x + 1,
+                y: self.y,
+            },
         }
     }
 }
@@ -97,13 +109,20 @@ struct Memory {
 impl Memory {
     fn new(width: usize, height: usize) -> Self {
         let grid = vec![vec![Byte::Healthy; width]; height];
-        Memory { grid, width, height }
+        Memory {
+            grid,
+            width,
+            height,
+        }
     }
     fn start(&self) -> Position {
         Position { x: 0, y: 0 }
     }
     fn exit(&self) -> Position {
-        Position { x: self.width as i64 - 1, y: self.height as i64 - 1 }
+        Position {
+            x: self.width as i64 - 1,
+            y: self.height as i64 - 1,
+        }
     }
     fn is_start(&self, position: Position) -> bool {
         self.start().eq(&position)
@@ -112,7 +131,10 @@ impl Memory {
         self.exit().eq(&position)
     }
     fn is_valid(&self, position: Position) -> bool {
-        position.x >= 0 && position.x < self.width as i64 && position.y >= 0 && position.y < self.height as i64
+        position.x >= 0
+            && position.x < self.width as i64
+            && position.y >= 0
+            && position.y < self.height as i64
     }
 }
 
@@ -123,7 +145,10 @@ struct CorruptingMemory {
 
 impl CorruptingMemory {
     fn new(memory: Memory, corruptions: Positions) -> Self {
-        CorruptingMemory { memory, corruptions }
+        CorruptingMemory {
+            memory,
+            corruptions,
+        }
     }
     fn shortest_path(&self, start: Position, finish: Position) -> Option<Path> {
         let path = Path::new_with_start(start);
@@ -134,24 +159,21 @@ impl CorruptingMemory {
 fn parse_position(i: &str) -> IResult<&str, Position> {
     map(
         terminated(
-            separated_pair(
-                complete::i64,
-                tag(","),
-                complete::i64,
-            ),
-            opt(newline)  
+            separated_pair(complete::i64, tag(","), complete::i64),
+            opt(newline),
         ),
-        |(x, y)| Position { x, y }
-    )(i)
+        |(x, y)| Position { x, y },
+    )
+    .parse(i)
 }
 
 fn parse_positions(i: &str) -> IResult<&str, Positions> {
-    many1(parse_position)(i)
+    many1(parse_position).parse(i)
 }
 
 fn parse_input(input: &str) -> Result<Positions> {
     parse_positions(input).map_and_finish()
-} 
+}
 
 enum MemorySize {
     Small,
@@ -195,8 +217,10 @@ impl Task for Solver {
         let corrupting_memory = CorruptingMemory::new(memory, corruptions);
 
         // Solve.
-        let path = corrupting_memory.shortest_path(start, finish).expect("No path found");
-        
+        let path = corrupting_memory
+            .shortest_path(start, finish)
+            .expect("No path found");
+
         Ok(path.num_steps().to_string())
     }
 

@@ -242,7 +242,8 @@ fn parse_map(input: &str) -> IResult<&str, Map> {
             }),
             map(tag("#"), |_| Tile::Block),
         ))),
-    )(input)?;
+    )
+    .parse(input)?;
     let rows = tiles.len();
     let cols = tiles.first().map_or(0, |row| row.len());
     Ok((input, Map { tiles, rows, cols }))

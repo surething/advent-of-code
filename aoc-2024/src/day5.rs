@@ -1,14 +1,12 @@
 use aoc_common::prelude::*;
 use aoc_data::prelude::*;
-use nom::branch::alt;
-use nom::bytes::complete::{tag, take_while};
-use nom::character::complete::{newline, space0};
-use nom::character::{complete, is_newline, is_space};
+use nom::IResult;
+use nom::bytes::complete::tag;
+use nom::character::complete;
+use nom::character::complete::newline;
 use nom::combinator::{map, opt};
 use nom::multi::{many0, many1, separated_list1};
 use nom::sequence::{separated_pair, terminated};
-use nom::{bytes, IResult};
-use aoc_data::prelude::ResourceReader;
 
 type Page = u32;
 
@@ -93,24 +91,25 @@ fn parse_rule(i: &str) -> IResult<&str, Rule> {
     map(
         separated_pair(parse_page, tag("|"), parse_page),
         |(ante, post)| Rule { ante, post },
-    )(i)
+    )
+    .parse(i)
 }
 
 fn parse_rules(i: &str) -> IResult<&str, Rules> {
-    many1(terminated(parse_rule, newline))(i)
+    many1(terminated(parse_rule, newline)).parse(i)
 }
 
 fn parse_update(i: &str) -> IResult<&str, Update> {
-    terminated(separated_list1(tag(","), parse_page), opt(newline))(i)
+    terminated(separated_list1(tag(","), parse_page), opt(newline)).parse(i)
 }
 
 fn parse_updates(i: &str) -> IResult<&str, Updates> {
-    many1(parse_update)(i)
+    many1(parse_update).parse(i)
 }
 
 fn parse_raw(i: &str) -> IResult<&str, (Rules, Updates)> {
     let (i, rules) = parse_rules(i)?;
-    let (i, _) = many0(newline)(i)?;
+    let (i, _) = many0(newline).parse(i)?;
     let (_, updates) = parse_updates(i)?;
     Ok((i, (rules, updates)))
 }
@@ -158,7 +157,6 @@ impl Task for Solver {
 
 #[cfg(test)]
 mod test {
-
     use super::*;
     use rstest::*;
 

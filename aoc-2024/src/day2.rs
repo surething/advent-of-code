@@ -66,11 +66,12 @@ fn parse_report(i: &str) -> IResult<&str, Report> {
             opt(complete::newline),
         ),
         Report::new,
-    )(i)
+    )
+    .parse(i)
 }
 
 fn parse_input(i: &str) -> Result<Vec<Report>> {
-    many1(parse_report)(i).map_and_finish()
+    many1(parse_report).parse(i).map_and_finish()
 }
 
 struct Solver {}

@@ -34,7 +34,7 @@ aoc-data = { path = "aoc-data" }
 
 itertools = { version = "0.14.0" }
 nalgebra = { version = "0.34.1" }
-nom = { version = "7.0.0" }
+nom = { version = "8.0.0" }
 thiserror = { version = "2.0.17" }
 strum = { version = "0.27.2", features = ["derive"] }
 z3 = { version = "0.19.2" }

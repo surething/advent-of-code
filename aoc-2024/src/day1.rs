@@ -24,11 +24,12 @@ fn parse_pair(i: &str) -> IResult<&str, Pair> {
             opt(complete::newline),
         ),
         |(left, right)| Pair::new(left, right),
-    )(i)
+    )
+    .parse(i)
 }
 
 fn parse_input(i: &str) -> Result<Vec<Pair>> {
-    many1(parse_pair)(i).map_and_finish()
+    many1(parse_pair).parse(i).map_and_finish()
 }
 
 struct Solver {}
@@ -36,7 +37,6 @@ struct Solver {}
 impl ResourceReader for Solver {}
 
 impl Task for Solver {
-
     fn event(&self) -> Event {
         Event::Event2024
     }

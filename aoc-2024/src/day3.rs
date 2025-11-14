@@ -1,7 +1,7 @@
 use aoc_common::prelude::*;
 use aoc_data::prelude::*;
 use nom::branch::alt;
-use nom::bytes::complete::{tag, take, take_until};
+use nom::bytes::complete::{tag, take};
 use nom::character::complete;
 use nom::combinator::map;
 use nom::multi::many1;
@@ -31,15 +31,16 @@ fn parse_mul(i: &str) -> IResult<&str, Op> {
             |(a, b)| Op::Mul(a, b),
         ),
         tag(")"),
-    )(i)
+    )
+    .parse(i)
 }
 
 fn parse_enable(i: &str) -> IResult<&str, Op> {
-    map(tag("do()"), |_| Op::Enable)(i)
+    map(tag("do()"), |_| Op::Enable).parse(i)
 }
 
 fn parse_disable(i: &str) -> IResult<&str, Op> {
-    map(tag("don't()"), |_| Op::Disable)(i)
+    map(tag("don't()"), |_| Op::Disable).parse(i)
 }
 
 fn parse_ops(i: &str) -> IResult<&str, Op> {
@@ -48,11 +49,12 @@ fn parse_ops(i: &str) -> IResult<&str, Op> {
         parse_enable,
         parse_mul,
         preceded(take(1usize), parse_ops),
-    ))(i)
+    ))
+    .parse(i)
 }
 
 fn parse_input(i: &str) -> Result<Vec<Op>> {
-    many1(parse_ops)(i).map_and_finish()
+    many1(parse_ops).parse(i).map_and_finish()
 }
 
 struct Solver {}
@@ -98,7 +100,6 @@ impl Task for Solver {
 
 #[cfg(test)]
 mod test {
-
     use super::*;
     use rstest::*;
 

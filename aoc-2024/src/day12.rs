@@ -1,11 +1,8 @@
 use aoc_common::prelude::*;
 use aoc_data::prelude::*;
 use itertools::MinMaxResult;
-use nom::branch::alt;
-use nom::bytes::complete::tag;
+use nom::AsChar;
 use nom::character::complete::{newline, satisfy};
-use nom::character::is_newline;
-use nom::combinator::map;
 use nom::multi::{many1, separated_list1};
 use std::collections::{HashMap, HashSet};
 use std::ops::Index;
@@ -259,7 +256,8 @@ impl Iterator for CoordinateIterator {
 }
 
 fn parse_garden(i: &str) -> IResult<&str, Garden> {
-    let (input, plots) = separated_list1(newline, many1(satisfy(|c| !is_newline(c as u8))))(i)?;
+    let (input, plots) =
+        separated_list1(newline, many1(satisfy(|c| !AsChar::is_newline(c as u8)))).parse(i)?;
     let garden = Garden::new(plots);
     Ok((i, garden))
 }
@@ -294,7 +292,6 @@ impl Task for Solver {
 
 #[cfg(test)]
 mod test {
-
     use super::*;
     use rstest::*;
 

@@ -1,8 +1,7 @@
 use aoc_common::prelude::*;
 use aoc_data::prelude::*;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::ops::Index;
-use aoc_data::prelude::ResourceReader;
 
 #[derive(Debug, EnumIter)]
 enum Direction {
@@ -270,7 +269,6 @@ impl Task for Solver {
 
 #[cfg(test)]
 mod test {
-
     use super::*;
     use rstest::*;
 

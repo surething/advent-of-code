@@ -78,14 +78,14 @@ type Equations = Vec<Equation>;
 
 fn parse_equation(i: &str) -> IResult<&str, Equation> {
     let (i, lhs) = complete::i64(i)?;
-    let (i, _) = tag(": ")(i)?;
-    let (i, rhs) = separated_list1(space1, complete::i64)(i)?;
-    let (i, _) = opt(newline)(i)?;
+    let (i, _) = tag(": ").parse(i)?;
+    let (i, rhs) = separated_list1(space1, complete::i64).parse(i)?;
+    let (i, _) = opt(newline).parse(i)?;
     Ok((i, Equation { lhs, rhs }))
 }
 
 fn parse_input(i: &str) -> Result<Equations> {
-    many1(parse_equation)(i).map_and_finish()
+    many1(parse_equation).parse(i).map_and_finish()
 }
 
 struct Solver {}

@@ -39,7 +39,8 @@ fn parse_stones(i: &str) -> IResult<&str, Stones> {
             *acc.entry(stone).or_insert(0) += 1;
             acc
         })
-    })(i)
+    })
+    .parse(i)
 }
 
 fn parse_input(input: &str) -> Result<Stones> {
