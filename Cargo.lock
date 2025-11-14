@@ -14,6 +14,11 @@ dependencies = [
 [[package]]
 name = "aoc-2015"
 version = "0.1.0"
+dependencies = [
+ "aoc-common",
+ "aoc-data",
+ "rstest",
+]
 
 [[package]]
 name = "aoc-2016"
