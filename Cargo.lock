@@ -33,30 +33,72 @@ dependencies = [
 [[package]]
 name = "aoc-2017"
 version = "0.1.0"
+dependencies = [
+ "aoc-common",
+ "aoc-data",
+ "nom 8.0.0",
+ "rstest",
+]
 
 [[package]]
 name = "aoc-2018"
 version = "0.1.0"
+dependencies = [
+ "aoc-common",
+ "aoc-data",
+ "nom 8.0.0",
+ "rstest",
+]
 
 [[package]]
 name = "aoc-2019"
 version = "0.1.0"
+dependencies = [
+ "aoc-common",
+ "aoc-data",
+ "nom 8.0.0",
+ "rstest",
+]
 
 [[package]]
 name = "aoc-2020"
 version = "0.1.0"
+dependencies = [
+ "aoc-common",
+ "aoc-data",
+ "nom 8.0.0",
+ "rstest",
+]
 
 [[package]]
 name = "aoc-2021"
 version = "0.1.0"
+dependencies = [
+ "aoc-common",
+ "aoc-data",
+ "nom 8.0.0",
+ "rstest",
+]
 
 [[package]]
 name = "aoc-2022"
 version = "0.1.0"
+dependencies = [
+ "aoc-common",
+ "aoc-data",
+ "nom 8.0.0",
+ "rstest",
+]
 
 [[package]]
 name = "aoc-2023"
 version = "0.1.0"
+dependencies = [
+ "aoc-common",
+ "aoc-data",
+ "nom 8.0.0",
+ "rstest",
+]
 
 [[package]]
 name = "aoc-2024"
@@ -75,6 +117,12 @@ dependencies = [
 [[package]]
 name = "aoc-2025"
 version = "0.1.0"
+dependencies = [
+ "aoc-common",
+ "aoc-data",
+ "nom 8.0.0",
+ "rstest",
+]
 
 [[package]]
 name = "aoc-cli"
