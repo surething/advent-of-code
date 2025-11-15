@@ -23,6 +23,12 @@ dependencies = [
 [[package]]
 name = "aoc-2016"
 version = "0.1.0"
+dependencies = [
+ "aoc-common",
+ "aoc-data",
+ "nom 8.0.0",
+ "rstest",
+]
 
 [[package]]
 name = "aoc-2017"
