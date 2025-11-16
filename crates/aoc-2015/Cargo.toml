@@ -6,6 +6,7 @@ edition = "2024"
 [dependencies]
 aoc-common.workspace = true
 aoc-data.workspace = true
+nom.workspace = true
 
 [dev-dependencies]
 rstest.workspace = true
