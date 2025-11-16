@@ -22,7 +22,7 @@ impl Inventory {
 
 fn parse_inventory(i: &str) -> IResult<&str, Inventory> {
     many1(terminated(complete::i32, opt(tag("\n"))))
-        .map(|items| Inventory::new(items))
+        .map(Inventory::new)
         .parse(i)
 }
 

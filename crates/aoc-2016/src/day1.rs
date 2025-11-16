@@ -79,7 +79,7 @@ impl State {
         self
     }
     fn norm1(&self) -> u32 {
-        self.pos.0.abs() as u32 + self.pos.1.abs() as u32
+        self.pos.0.unsigned_abs() + self.pos.1.unsigned_abs()
     }
 }
 

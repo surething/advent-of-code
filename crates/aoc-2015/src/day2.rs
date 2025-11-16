@@ -29,7 +29,7 @@ impl Present {
         2 * (area_1 + area_2 + area_3) + smallest_area
     }
     fn ribbon_length(&self) -> u32 {
-        let mut dimensions = vec![self.length, self.width, self.height];
+        let mut dimensions = [self.length, self.width, self.height];
         dimensions.sort_unstable();
         let perimeter = 2 * (dimensions[0] + dimensions[1]);
         let bow = self.length * self.width * self.height;
