@@ -21,10 +21,7 @@ fn calculate_full_fuel(mass: &i32) -> i32 {
 }
 
 fn parse_mass(i: &str) -> IResult<&str, i32> {
-    terminated(
-        complete::i32,
-        opt(newline),
-    ).parse(i)
+    terminated(complete::i32, opt(newline)).parse(i)
 }
 
 fn parse_input(i: &str) -> Result<Vec<i32>> {
@@ -46,19 +43,13 @@ impl Task for Solver {
 
     fn solve_part1(&self, input: &str) -> Result<String> {
         let masses = parse_input(input.trim())?;
-        let fuel = masses
-            .iter()
-            .map(calculate_fuel)
-            .sum::<i32>();
+        let fuel = masses.iter().map(calculate_fuel).sum::<i32>();
         Ok(fuel.to_string())
     }
 
     fn solve_part2(&self, input: &str) -> Result<String> {
         let masses = parse_input(input.trim())?;
-        let fuel = masses
-            .iter()
-            .map(calculate_full_fuel)
-            .sum::<i32>();
+        let fuel = masses.iter().map(calculate_full_fuel).sum::<i32>();
         Ok(fuel.to_string())
     }
 }

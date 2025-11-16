@@ -1,42 +1,31 @@
-use std::collections::HashSet;
+use aoc_common::prelude::*;
+use aoc_data::prelude::*;
 use nom::branch::alt;
 use nom::character::complete;
 use nom::character::complete::newline;
 use nom::combinator::{map, opt};
 use nom::multi::many1;
 use nom::sequence::{preceded, terminated};
-use aoc_common::prelude::*;
-use aoc_data::prelude::*;
+use std::collections::HashSet;
 
 fn parse_positive(i: &str) -> IResult<&str, i32> {
-    preceded(
-        complete::char('+'),
-        complete::i32,
-    ).parse(i)
+    preceded(complete::char('+'), complete::i32).parse(i)
 }
 
 fn parse_negative(i: &str) -> IResult<&str, i32> {
-    preceded(
-        complete::char('-'),
-        map(complete::i32, |i| -i),
-    ).parse(i)
+    preceded(complete::char('-'), map(complete::i32, |i| -i)).parse(i)
 }
 
 fn parse_separator(i: &str) -> IResult<&str, ()> {
     alt((
         newline.map(|_| ()),
         (complete::char(','), complete::space0).map(|_| ()),
-    )).parse(i)
+    ))
+    .parse(i)
 }
 
 fn parse_delta(i: &str) -> IResult<&str, i32> {
-    terminated(
-        alt((
-            parse_positive,
-            parse_negative,
-        )),
-        opt(parse_separator),
-    ).parse(i)
+    terminated(alt((parse_positive, parse_negative)), opt(parse_separator)).parse(i)
 }
 
 fn parse_input(i: &str) -> Result<Vec<i32>> {
@@ -71,7 +60,10 @@ impl Task for Solver {
         for delta in deltas.iter().cycle() {
             iteration += 1;
             if iteration > 1_000_000 {
-                return Err(AdventError::Other(format!("No frequency found within limit: {}", iteration)));
+                return Err(AdventError::Other(format!(
+                    "No frequency found within limit: {}",
+                    iteration
+                )));
             }
             frequency += delta;
             if !seen.insert(frequency) {

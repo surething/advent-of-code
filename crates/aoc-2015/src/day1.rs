@@ -1,6 +1,6 @@
-use std::ops::ControlFlow::{Break, Continue};
 use aoc_common::prelude::*;
 use aoc_data::prelude::*;
+use std::ops::ControlFlow::{Break, Continue};
 
 struct Solver {}
 
@@ -22,7 +22,10 @@ impl Task for Solver {
             .try_fold(0, |acc, c| match c {
                 '(' => Ok(acc + 1),
                 ')' => Ok(acc - 1),
-                c => Err(AdventError::InvalidInput(format!("Invalid character: {}", c))),
+                c => Err(AdventError::InvalidInput(format!(
+                    "Invalid character: {}",
+                    c
+                ))),
             })
             .map(|floor| floor.to_string())
     }
@@ -36,7 +39,12 @@ impl Task for Solver {
                 let new_acc = match c {
                     '(' => acc + 1,
                     ')' => acc - 1,
-                    c => return Break(Err(AdventError::InvalidInput(format!("Invalid character: {}", c)))),
+                    c => {
+                        return Break(Err(AdventError::InvalidInput(format!(
+                            "Invalid character: {}",
+                            c
+                        ))));
+                    }
                 };
                 match new_acc {
                     -1 => Break(Ok(idx as i32 + 1 - acc)),

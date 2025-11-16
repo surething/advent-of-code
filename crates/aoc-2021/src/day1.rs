@@ -1,16 +1,12 @@
+use aoc_common::prelude::*;
+use aoc_data::prelude::*;
 use nom::character::complete;
 use nom::combinator::opt;
 use nom::multi::many1;
 use nom::sequence::terminated;
-use aoc_common::prelude::*;
-use aoc_data::prelude::*;
 
 fn parse_depth(i: &str) -> IResult<&str, i32> {
-    terminated(
-        complete::i32,
-        opt(complete::newline),
-    )
-    .parse(i)
+    terminated(complete::i32, opt(complete::newline)).parse(i)
 }
 
 fn parse_input(i: &str) -> Result<Vec<i32>> {
@@ -32,11 +28,7 @@ impl Task for Solver {
 
     fn solve_part1(&self, input: &str) -> Result<String> {
         let depths = parse_input(input.trim())?;
-        let count = depths
-            .iter()
-            .tuple_windows()
-            .filter(|(a, b)| b > a)
-            .count();
+        let count = depths.iter().tuple_windows().filter(|(a, b)| b > a).count();
         Ok(count.to_string())
     }
 

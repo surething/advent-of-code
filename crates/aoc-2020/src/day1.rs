@@ -7,10 +7,7 @@ use nom::multi::many1;
 use nom::sequence::terminated;
 
 fn parse_expense(i: &str) -> IResult<&str, i32> {
-    terminated(
-        complete::i32,
-        opt(newline),
-    ).parse(i)
+    terminated(complete::i32, opt(newline)).parse(i)
 }
 
 fn parse_input(i: &str) -> Result<Vec<i32>> {

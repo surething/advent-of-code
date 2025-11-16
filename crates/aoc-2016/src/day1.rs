@@ -1,12 +1,12 @@
-use std::collections::HashSet;
-use std::ops::ControlFlow;
-use std::ops::ControlFlow::{Break, Continue};
+use aoc_common::prelude::*;
+use aoc_data::prelude::*;
 use nom::branch::alt;
 use nom::character::complete;
 use nom::combinator::opt;
 use nom::multi::many1;
-use aoc_common::prelude::*;
-use aoc_data::prelude::*;
+use std::collections::HashSet;
+use std::ops::ControlFlow;
+use std::ops::ControlFlow::{Break, Continue};
 
 #[derive(Debug, Clone, Copy)]
 enum Action {
@@ -148,9 +148,9 @@ impl Task for Solver {
 
     fn solve_part1(&self, input: &str) -> Result<String> {
         let actions = parse_input(input.trim())?;
-        let state = actions.iter().fold(State::new(), |mut state, &action| {
-            state.apply(action)
-        });
+        let state = actions
+            .iter()
+            .fold(State::new(), |mut state, &action| state.apply(action));
         Ok(state.norm1().to_string())
     }
 

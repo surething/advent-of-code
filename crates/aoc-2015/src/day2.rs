@@ -1,9 +1,9 @@
+use aoc_common::prelude::*;
+use aoc_data::prelude::*;
 use nom::character::complete;
 use nom::combinator::opt;
 use nom::multi::many1;
 use nom::sequence::terminated;
-use aoc_common::prelude::*;
-use aoc_data::prelude::*;
 
 struct Present {
     length: u32,
@@ -38,18 +38,18 @@ impl Present {
 }
 
 fn parse_present(i: &str) -> IResult<&str, Present> {
-        terminated(
-            (
-                complete::u32,
-                complete::char('x'),
-                complete::u32,
-                complete::char('x'),
-                complete::u32,
-            ),
-            opt(complete::newline),
-        )
-        .map(|(l, _, w, _, h)| Present::new(l, w, h))
-        .parse(i)
+    terminated(
+        (
+            complete::u32,
+            complete::char('x'),
+            complete::u32,
+            complete::char('x'),
+            complete::u32,
+        ),
+        opt(complete::newline),
+    )
+    .map(|(l, _, w, _, h)| Present::new(l, w, h))
+    .parse(i)
 }
 
 fn parse_input(i: &str) -> Result<Vec<Present>> {

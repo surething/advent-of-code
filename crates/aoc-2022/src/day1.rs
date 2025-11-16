@@ -1,11 +1,11 @@
-use std::cmp::max;
+use aoc_common::prelude::*;
+use aoc_data::prelude::*;
 use nom::bytes::complete::tag;
 use nom::character::complete;
 use nom::combinator::opt;
 use nom::multi::{many1, separated_list1};
 use nom::sequence::terminated;
-use aoc_common::prelude::*;
-use aoc_data::prelude::*;
+use std::cmp::max;
 
 struct Inventory {
     items: Vec<i32>,
@@ -21,21 +21,15 @@ impl Inventory {
 }
 
 fn parse_inventory(i: &str) -> IResult<&str, Inventory> {
-    many1(
-        terminated(
-            complete::i32,
-            opt(tag("\n")),
-        )
-    )
+    many1(terminated(complete::i32, opt(tag("\n"))))
         .map(|items| Inventory::new(items))
         .parse(i)
 }
 
 fn parse_input(i: &str) -> Result<Vec<Inventory>> {
-    separated_list1(
-        tag("\n"),
-        parse_inventory,
-    ).parse(i).map_and_finish()
+    separated_list1(tag("\n"), parse_inventory)
+        .parse(i)
+        .map_and_finish()
 }
 
 struct Solver {}
@@ -63,15 +57,10 @@ impl Task for Solver {
 
     fn solve_part2(&self, input: &str) -> Result<String> {
         let inventories = parse_input(input.trim())?;
-        let mut total_calories: Vec<i32> = inventories
-            .iter()
-            .map(|inv| inv.total_calories())
-            .collect();
+        let mut total_calories: Vec<i32> =
+            inventories.iter().map(|inv| inv.total_calories()).collect();
         total_calories.sort_unstable_by(|a, b| b.cmp(a));
-        let top_three_sum: i32 = total_calories
-            .iter()
-            .take(3)
-            .sum();
+        let top_three_sum: i32 = total_calories.iter().take(3).sum();
         Ok(top_three_sum.to_string())
     }
 }

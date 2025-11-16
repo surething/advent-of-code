@@ -34,7 +34,7 @@ impl Task for Solver {
             .tuple_windows()
             .try_fold(0, kernel)
             .map(|sum| sum.to_string())
-      }
+    }
 
     fn solve_part2(&self, input: &str) -> Result<String> {
         let trimmed = input.trim();
