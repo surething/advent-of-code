@@ -8,5 +8,7 @@ aoc-common.workspace = true
 aoc-data.workspace = true
 nom.workspace = true
 
+md5 = { version = "0.8.0" }
+
 [dev-dependencies]
 rstest.workspace = true
