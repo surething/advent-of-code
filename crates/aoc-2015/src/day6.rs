@@ -29,17 +29,18 @@ struct Instruction {
     bounds: Bounds,
 }
 
-struct LitGrid {
-    lights: Vec<Vec<bool>>,
+struct Grid<T> {
+    lights: Vec<Vec<T>>,
 }
 
-struct BrightnessGrid {
-    lights: Vec<Vec<u32>>,
-}
+type LitGrid = Grid<bool>;
+type BrightnessGrid = Grid<u32>;
+
+type Kernel<T> = fn(&mut T);
 
 trait KernelApply<T> {
     fn lights(&mut self) -> &mut Vec<Vec<T>>;
-    fn apply_kernel(&mut self, bounds: &Bounds, op: fn(&mut T)) {
+    fn apply_kernel(&mut self, bounds: &Bounds, op: Kernel<T>) {
         let start = &bounds.start;
         let end = &bounds.end;
         for x in start.x..=end.x {
@@ -50,14 +51,8 @@ trait KernelApply<T> {
     }
 }
 
-impl KernelApply<bool> for LitGrid {
-    fn lights(&mut self) -> &mut Vec<Vec<bool>> {
-        &mut self.lights
-    }
-}
-
-impl KernelApply<u32> for BrightnessGrid {
-    fn lights(&mut self) -> &mut Vec<Vec<u32>> {
+impl<T> KernelApply<T> for Grid<T> {
+    fn lights(&mut self) -> &mut Vec<Vec<T>> {
         &mut self.lights
     }
 }
