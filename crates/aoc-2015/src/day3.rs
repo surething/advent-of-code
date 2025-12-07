@@ -1,9 +1,9 @@
-use std::collections::HashSet;
+use aoc_common::prelude::*;
+use aoc_data::prelude::*;
 use nom::character::complete;
 use nom::combinator::map;
 use nom::multi::many1;
-use aoc_common::prelude::*;
-use aoc_data::prelude::*;
+use std::collections::HashSet;
 
 enum Move {
     Up,
@@ -13,16 +13,14 @@ enum Move {
 }
 
 fn parse_move(i: &str) -> IResult<&str, Move> {
-    map(
-        complete::one_of("^v<>"),
-        |c| match c {
-            '^' => Move::Up,
-            'v' => Move::Down,
-            '<' => Move::Left,
-            '>' => Move::Right,
-            _ => unreachable!(),
-        },
-    ).parse(i)
+    map(complete::one_of("^v<>"), |c| match c {
+        '^' => Move::Up,
+        'v' => Move::Down,
+        '<' => Move::Left,
+        '>' => Move::Right,
+        _ => unreachable!(),
+    })
+    .parse(i)
 }
 
 fn parse_input(i: &str) -> Result<Vec<Move>> {
@@ -37,7 +35,10 @@ struct Coordinate {
 
 impl From<(i32, i32)> for Coordinate {
     fn from(value: (i32, i32)) -> Self {
-        Coordinate { x: value.0, y: value.1 }
+        Coordinate {
+            x: value.0,
+            y: value.1,
+        }
     }
 }
 
@@ -54,7 +55,8 @@ impl Coordinate {
             Move::Down => (self.x, self.y - 1),
             Move::Left => (self.x - 1, self.y),
             Move::Right => (self.x + 1, self.y),
-        }.into()
+        }
+        .into()
     }
 }
 
@@ -112,11 +114,8 @@ impl Task for Solver {
                 _ => unreachable!(),
             }
         }
-        let total_visited: HashSet<Coordinate> = santa
-            .visited
-            .union(&robo.visited)
-            .cloned()
-            .collect();
+        let total_visited: HashSet<Coordinate> =
+            santa.visited.union(&robo.visited).cloned().collect();
         Ok(total_visited.len().to_string())
     }
 }

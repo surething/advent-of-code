@@ -1,10 +1,10 @@
-use std::ops::Sub;
+use aoc_common::prelude::*;
+use aoc_data::prelude::*;
 use nom::bytes::complete::tag;
 use nom::character::complete;
 use nom::multi::{many1, separated_list1};
 use nom::sequence::separated_pair;
-use aoc_common::prelude::*;
-use aoc_data::prelude::*;
+use std::ops::Sub;
 
 struct Range {
     start: u64,
@@ -55,17 +55,15 @@ impl Range {
 }
 
 fn parse_range(i: &str) -> IResult<&str, Range> {
-    separated_pair(
-        complete::u64,
-        tag("-"),
-        complete::u64,
-    )
-    .map(|(start, end)| Range::new(start, end))
-    .parse(i)
+    separated_pair(complete::u64, tag("-"), complete::u64)
+        .map(|(start, end)| Range::new(start, end))
+        .parse(i)
 }
 
 fn parse_input(i: &str) -> Result<Vec<Range>> {
-    separated_list1(tag(","), parse_range).parse(i).map_and_finish()
+    separated_list1(tag(","), parse_range)
+        .parse(i)
+        .map_and_finish()
 }
 
 struct Solver {}
@@ -86,11 +84,12 @@ impl Task for Solver {
         let sum: u64 = ranges
             .iter()
             .map(|range| {
-                (range.start ..= range.end)
+                (range.start..=range.end)
                     .filter(|&i| i.ilog10() % 2 == 1)
                     .filter(|&i| i.subrepeating((i.ilog10() as usize + 1) / 2))
                     .sum::<u64>()
-            }).sum();
+            })
+            .sum();
         Ok(sum.to_string())
     }
 
@@ -99,10 +98,11 @@ impl Task for Solver {
         let sum: u64 = ranges
             .iter()
             .map(|range| {
-                (range.start ..= range.end)
+                (range.start..=range.end)
                     .filter(|&i| i.any_subrepeating())
                     .sum::<u64>()
-            }).sum();
+            })
+            .sum();
         Ok(sum.to_string())
     }
 }

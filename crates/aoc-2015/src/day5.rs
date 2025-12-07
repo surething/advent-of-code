@@ -1,6 +1,6 @@
-use std::fmt::Display;
 use aoc_common::prelude::*;
 use aoc_data::prelude::*;
+use std::fmt::Display;
 
 #[derive(Debug, PartialEq)]
 enum Niceness {
@@ -43,16 +43,11 @@ impl Part1 for String {
     }
     fn vowel_rule(&self) -> bool {
         let vowels = ['a', 'e', 'i', 'o', 'u'];
-        let count = self
-            .chars()
-            .filter(|c| vowels.contains(c))
-            .count();
+        let count = self.chars().filter(|c| vowels.contains(c)).count();
         count >= 3
     }
     fn double_letter_rule(&self) -> bool {
-        self.chars()
-            .tuple_windows()
-            .any(|(a, b)| a == b)
+        self.chars().tuple_windows().any(|(a, b)| a == b)
     }
     fn forbidden_substrings_rule(&self) -> bool {
         let forbidden = ["ab", "cd", "pq", "xy"];
@@ -62,29 +57,21 @@ impl Part1 for String {
 
 impl Part2 for String {
     fn judge_part2(&self) -> Niceness {
-        match (
-            self.pair_repeat_rule(),
-            self.repeat_with_one_between_rule(),
-        ) {
+        match (self.pair_repeat_rule(), self.repeat_with_one_between_rule()) {
             (true, true) => Niceness::Nice,
             _ => Niceness::Naughty,
         }
     }
     fn pair_repeat_rule(&self) -> bool {
-        self.chars()
-            .tuple_windows()
-            .enumerate()
-            .any(|(i, (a, b))| {
-                self.chars()
-                    .skip(i + 2)
-                    .tuple_windows()
-                    .any(|(c, d)| a == c && b == d)
-            })
+        self.chars().tuple_windows().enumerate().any(|(i, (a, b))| {
+            self.chars()
+                .skip(i + 2)
+                .tuple_windows()
+                .any(|(c, d)| a == c && b == d)
+        })
     }
     fn repeat_with_one_between_rule(&self) -> bool {
-        self.chars()
-            .tuple_windows()
-            .any(|(a, _, c)| a == c)
+        self.chars().tuple_windows().any(|(a, _, c)| a == c)
     }
 }
 
