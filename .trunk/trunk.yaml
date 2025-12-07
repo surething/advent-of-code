@@ -22,6 +22,7 @@ lint:
     - git-diff-check
     - markdownlint@0.46.0
     - osv-scanner@2.3.0
+    - oxipng@10.0.0
     - prettier@3.7.4
     - rustfmt@1.91.1
     - taplo@0.10.0
@@ -29,6 +30,7 @@ lint:
     - yamllint@1.37.1
 actions:
   disabled:
+    - git-lfs
     - trunk-announce
     - trunk-check-pre-push
     - trunk-fmt-pre-commit
