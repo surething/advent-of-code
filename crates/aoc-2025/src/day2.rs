@@ -22,7 +22,7 @@ impl Subrepeating for u64 {
         let len = s.len();
         let max_sublen = len / 2;
 
-        if num == 0 || num > max_sublen || len % num != 0 {
+        if num == 0 || num > max_sublen || !len.is_multiple_of(num) {
             return false;
         }
 
@@ -86,7 +86,7 @@ impl Task for Solver {
             .map(|range| {
                 (range.start..=range.end)
                     .filter(|&i| i.ilog10() % 2 == 1)
-                    .filter(|&i| i.subrepeating((i.ilog10() as usize + 1) / 2))
+                    .filter(|&i| i.subrepeating((i.ilog10() as usize).div_ceil(2)))
                     .sum::<u64>()
             })
             .sum();
